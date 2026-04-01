@@ -175,11 +175,7 @@ body {
     width: 40px;
     height: 1px;
     background: var(--border);
-    margin: 0 auto;
-    position: absolute;
-    bottom: 100px;
-    left: 50%;
-    transform: translateX(-50%);
+    margin: 32px auto 0;
 }
 
 .app-title {

@@ -35,13 +35,29 @@ const sounds = {
 };
 
 // 音量設定
-sounds.button.volume = 0.3; // 決定ボタンの音量を下げる
+sounds.button.volume = 0.3;
+
+// モバイル音声プリロード（初回タップで全音声を解放）
+let audioUnlocked = false;
+function unlockAudio() {
+    if (audioUnlocked) return;
+    audioUnlocked = true;
+    Object.values(sounds).forEach(audio => {
+        audio.load();
+        const p = audio.play();
+        if (p) p.then(() => { audio.pause(); audio.currentTime = 0; }).catch(() => {});
+    });
+    document.removeEventListener('touchstart', unlockAudio);
+    document.removeEventListener('click', unlockAudio);
+}
+document.addEventListener('touchstart', unlockAudio, { once: true });
+document.addEventListener('click', unlockAudio, { once: true });
 
 // 音声再生ヘルパー関数
 function playSound(soundName) {
     try {
         if (sounds[soundName]) {
-            sounds[soundName].currentTime = 0; // 再生位置をリセット
+            sounds[soundName].currentTime = 0;
             sounds[soundName].play().catch(e => console.log('音声再生エラー:', e));
         }
     } catch (e) {
